@@ -1,3 +1,5 @@
+import postfix._
+
 lazy val root = Project("juxtaphase", file("."))
   .settings(commonSettings: _*)
   .aggregate(console, web)
@@ -12,8 +14,7 @@ lazy val console = projectAt("console")
   .dependsOn(core)
 
 lazy val web = projectAt("web")
-  .settings(commonSettings: _*)
-  .enablePlugins(PlayScala)
+  .settings(commonSettings: _*).enablePlay
   .dependsOn(core)
 
 def projectAt(s: String) = Project("juxtaphase-" + s, file("juxtaphase-" + s))
