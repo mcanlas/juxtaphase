@@ -5,6 +5,7 @@ lazy val root = Project("juxtaphase", file("."))
 lazy val core = projectAt("core")
   .settings(commonSettings: _*)
   .settings(catsIo: _*)
+  .settings(resourceManager: _*)
 
 lazy val console = projectAt("console")
   .settings(commonSettings: _*)
@@ -23,3 +24,6 @@ lazy val commonSettings = Seq(
 
 lazy val catsIo =
   Seq(libraryDependencies += "org.typelevel" %% "cats-effect" % "1.0.0-RC")
+
+lazy val resourceManager =
+  Seq(libraryDependencies += "com.iravid" %% "managedt" % "0.1")
