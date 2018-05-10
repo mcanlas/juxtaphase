@@ -13,6 +13,7 @@ lazy val console = projectAt("console")
 
 lazy val web = projectAt("web")
   .settings(commonSettings: _*)
+  .enablePlugins(PlayScala)
   .dependsOn(core)
 
 def projectAt(s: String) = Project("juxtaphase-" + s, file("juxtaphase-" + s))
