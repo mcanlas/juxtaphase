@@ -1,1 +1,1 @@
-GET     /     controllers.CompileController.compile
+POST     /     controllers.CompileController.compile
