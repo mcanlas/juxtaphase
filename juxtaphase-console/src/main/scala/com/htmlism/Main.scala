@@ -2,6 +2,8 @@ package com.htmlism
 
 import scala.sys.process._
 
+import better.files.File
+
 object Main {
   def main(args: Array[String]): Unit =
     args.lift(0) match {
@@ -15,6 +17,23 @@ object Main {
   def compile(s: String) = {
     val allPhases = (1 to 24).mkString(",")
 
-    println(Seq("scalac", "-Xprint:" + allPhases, "-d", "/tmp", s).!!)
+    val tmpDir = File.newTemporaryDirectory()
+
+    println(Seq("scalac", "-Xprint:" + allPhases, "-d", tmpDir.pathAsString, s).!!)
+
+    println(tmpDir)
+
+    val files = tmpDir
+      .listRecursively
+      .filter(f => f.extension.contains(".class"))
+      .toList
+      .sortBy(_.pathAsString)
+
+    for (f <- files) {
+      println
+      println(f.pathAsString)
+
+      println(Seq("javap", "-c", "-private", "-v", f.pathAsString).!!)
+    }
   }
 }
