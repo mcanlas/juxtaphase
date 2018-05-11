@@ -29,11 +29,13 @@ object Main {
       .toList
       .sortBy(_.pathAsString)
 
+    val opt = CommandLineFlags.detectDisassemblyOptions
+
     for (f <- files) {
       println
       println(f.pathAsString)
 
-      println(Seq("javap", "-c", "-private", "-v", f.pathAsString).!!)
+      println(("javap" +: opt.flags :+ f.pathAsString).!!)
     }
   }
 }
