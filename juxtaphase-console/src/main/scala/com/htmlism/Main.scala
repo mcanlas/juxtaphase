@@ -18,16 +18,13 @@ object Main {
   def compile(s: String) = {
     val allPhases = (1 to 24).mkString(",")
 
-    val ior = new Runner[IO]
-
-    val prog =
+    runWithIo { io =>
       for {
-          d <- ior.createTempDirectory
-        src <- ior.createSrcDirectory(d)
-          _ <- ior.createBuildFlie(d)
+          d <- io.createTempDirectory
+        src <- io.createSrcDirectory(d)
+          _ <- io.createBuildFlie(d)
       } yield { println(src) }
-
-    prog.unsafeRunSync()
+    }
 
     val tmpDir = File.newTemporaryDirectory()
 
@@ -50,4 +47,7 @@ object Main {
       println(("javap" +: opt.flags :+ f.pathAsString).!!)
     }
   }
+
+  private def runWithIo(f: Runner[IO] => IO[Unit]): Unit =
+    f(new Runner[IO]).unsafeRunSync()
 }
