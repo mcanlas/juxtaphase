@@ -5,20 +5,21 @@ import scala.sys.process._
 import cats.effect._
 import better.files.File
 
-object Main {
-  def main(args: Array[String]): Unit =
-    args.lift(0) match {
-      case Some(s) =>
-        compile(s)
-
-      case None =>
-        throw new IllegalArgumentException("need to specify a file")
+object Main extends RunUnsafeSync {
+  def mainIo(args: Array[String]): IO[Unit] =
+    withEnvReader { env =>
+      withRunnerIo { _ =>
+        for {
+          src <- env.getSourceFile(args)
+          opt <- env.detectDisassemblyOptions
+        } yield compile(src, opt)
+      }
     }
 
-  def compile(s: String) = {
+  def compile(s: String, opt: DisassemblyOptions) = {
     val allPhases = (1 to 24).mkString(",")
 
-    runWithIo { io =>
+    withRunnerIo { io =>
       for {
           d <- io.createTempDirectory
         src <- io.createSrcDirectory(d)
@@ -38,8 +39,6 @@ object Main {
       .toList
       .sortBy(_.pathAsString)
 
-    val opt = CommandLineFlags.detectDisassemblyOptions
-
     for (f <- files) {
       println
       println(f.pathAsString)
@@ -48,6 +47,6 @@ object Main {
     }
   }
 
-  private def runWithIo(f: Runner[IO] => IO[Unit]): Unit =
-    f(new Runner[IO]).unsafeRunSync()
+  private def withEnvReader[A](f: EnvironmentReader[IO] => IO[A]) =
+    f(new EnvironmentReader[IO])
 }
