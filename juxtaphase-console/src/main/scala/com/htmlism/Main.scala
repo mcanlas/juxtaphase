@@ -2,6 +2,7 @@ package com.htmlism
 
 import scala.sys.process._
 
+import cats.effect._
 import better.files.File
 
 object Main {
@@ -16,6 +17,17 @@ object Main {
 
   def compile(s: String) = {
     val allPhases = (1 to 24).mkString(",")
+
+    val ior = new io.Runner[IO]
+
+    val prog =
+      for {
+          d <- ior.createTempDirectory
+        src <- ior.createSrcDirectory(d)
+          _ <- ior.createBuildFlie(d)
+      } yield { println(src) }
+
+    prog.unsafeRunSync()
 
     val tmpDir = File.newTemporaryDirectory()
 
