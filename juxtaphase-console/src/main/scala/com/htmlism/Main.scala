@@ -18,7 +18,7 @@ object Main {
   def compile(s: String) = {
     val allPhases = (1 to 24).mkString(",")
 
-    val ior = new io.Runner[IO]
+    val ior = new Runner[IO]
 
     val prog =
       for {

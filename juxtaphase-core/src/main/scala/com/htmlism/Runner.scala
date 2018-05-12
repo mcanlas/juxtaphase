@@ -1,4 +1,4 @@
-package com.htmlism.io
+package com.htmlism
 
 import cats.effect._
 
