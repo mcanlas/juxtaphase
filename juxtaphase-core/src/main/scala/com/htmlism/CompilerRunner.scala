@@ -1,5 +1,7 @@
 package com.htmlism
 
+import scala.sys.process._
+
 import cats.effect._
 
 import better.files.File
@@ -20,5 +22,12 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
       (root / "build.sbt")
         .createIfNotExists()
         .appendLine("scalaVersion := \"2.12.6\"")
+    }
+
+  private val allPhases = (1 to 24).mkString(",")
+
+  def runCompiler(srcFile: String, tmpDir: File): F[Unit] =
+    F.delay {
+      println(Seq("scalac", "-Xprint:" + allPhases, "-d", tmpDir.pathAsString, srcFile).!!)
     }
 }

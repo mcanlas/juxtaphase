@@ -8,29 +8,17 @@ import better.files.File
 object Main extends RunUnsafeSync {
   def mainIo(args: Array[String]): IO[Unit] =
     withEnvReader { env =>
-      withRunnerIo { _ =>
+      withRunnerIo { cpl =>
         for {
           src <- env.getSourceFile(args)
           opt <- env.detectDisassemblyOptions
-        } yield compile(src, opt)
+          tmp <- cpl.createTempDirectory
+            _ <- cpl.runCompiler(src, tmp)
+        } yield disassemble(tmp, opt)
       }
     }
 
-  def compile(s: String, opt: DisassemblyOptions) = {
-    val allPhases = (1 to 24).mkString(",")
-
-    withRunnerIo { io =>
-      for {
-          d <- io.createTempDirectory
-        src <- io.createSrcDirectory(d)
-          _ <- io.createBuildFlie(d)
-      } yield { println(src) }
-    }
-
-    val tmpDir = File.newTemporaryDirectory()
-
-    println(Seq("scalac", "-Xprint:" + allPhases, "-d", tmpDir.pathAsString, s).!!)
-
+  def disassemble(tmpDir: File, opt: DisassemblyOptions) = {
     println(tmpDir)
 
     val files = tmpDir
