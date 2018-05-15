@@ -4,7 +4,7 @@ import cats.effect._
 
 import better.files.File
 
-class Runner[F[_]](implicit F: Sync[F]) {
+class CompilerRunner[F[_]](implicit F: Sync[F]) {
   def createTempDirectory: F[File] =
     F.delay {
       File.newTemporaryDirectory()
