@@ -9,7 +9,10 @@ object Main extends RunUnsafeSync {
         for {
           src <- env.getSourceFile(args)
           opt <- env.detectDisassemblyOptions
-          tmp <- cpl.createTempDirectory
+
+          tmp <- cpl.runCompilerWithSbt(src)
+          _ = println(tmp)
+
             _ <- cpl.runCompiler(src, tmp)
            cs <- dis.findClassFiles(tmp)
             _ <- dis.disassemble(opt, cs)
