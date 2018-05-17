@@ -3,11 +3,12 @@ package com.htmlism
 import scala.sys.process._
 
 import cats.effect._
+import cats.implicits._
 
 import better.files.File
 
 class DisassemblerRunner[F[_]](implicit F: Sync[F]) {
-  def findClassFiles(root: File): F[Seq[File]] =
+  def findClassFiles(root: File): F[List[File]] =
     F.delay {
       root
         .listRecursively
@@ -16,12 +17,13 @@ class DisassemblerRunner[F[_]](implicit F: Sync[F]) {
         .sortBy(_.pathAsString)
     }
 
-  def disassemble(opt: DisassemblyOptions, fs: Seq[File]): F[Unit] =
-    F.delay {
-      for (f <- fs)
-        disassemble(opt, f)
-    }
+  def disassemble(opt: DisassemblyOptions, fs: List[File]): F[Unit] =
+    fs
+      .traverse(disassemble(opt))
+      .void
 
-  private def disassemble(opt: DisassemblyOptions, f: File) =
-    println(("javap" +: opt.flags :+ f.pathAsString).!!)
+  def disassemble(opt: DisassemblyOptions)(f: File): F[Unit] =
+    F.delay {
+      println(("javap" +: opt.flags :+ f.pathAsString).!!)
+    }
 }
