@@ -35,8 +35,14 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
 
   def runCompilerWithSbt(src: String): F[File] =
     for {
-           tmp <- createTempDirectory
-      scalaDir <- createSrcDirectory(tmp)
-      buildSbt <- createBuildFile(tmp)
-    } yield tmp
+       sbtRoot <- createTempDirectory
+      scalaDir <- createSrcDirectory(sbtRoot)
+             _ <- copySourceIntoSclaDirectory(src, scalaDir)
+      buildSbt <- createBuildFile(sbtRoot)
+    } yield sbtRoot
+
+  private def copySourceIntoSclaDirectory(src: String, scalaDir: File): F[Unit] =
+    F.delay {
+      File(src).copyToDirectory(scalaDir)
+    }
 }
