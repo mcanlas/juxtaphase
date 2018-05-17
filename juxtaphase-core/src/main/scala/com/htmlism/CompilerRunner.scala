@@ -1,11 +1,14 @@
 package com.htmlism
 
+import java.nio.file.attribute.PosixFilePermission
+
 import scala.sys.process._
 
 import cats.effect._
 import cats.implicits._
 
 import better.files.File
+import better.files.Dsl._
 
 class CompilerRunner[F[_]](implicit F: Sync[F]) {
   private def createTempDirectory: F[File] =
@@ -18,15 +21,15 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
       (root / "src" / "main" / "scala").createIfNotExists(asDirectory = true)
     }
 
-  private def createBuildFile(root: File): F[File] =
+  private def createBuildFile(sbtRoot: File): F[File] =
     F.delay {
-      (root / "build.sbt")
+      (sbtRoot / "build.sbt")
         .createIfNotExists()
         .appendLine("scalaVersion := \"2.12.6\"")
         .appendLine("scalacOptions += \"-Xprint:1\"")
     }
 
-  private val allPhases = (1 to 24).mkString(",")
+  private val allPhases = (1 to 2).mkString(",")
 
   def runCompiler(srcFile: String, tmpDir: File): F[Unit] =
     F.delay {
@@ -37,12 +40,35 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
     for {
        sbtRoot <- createTempDirectory
       scalaDir <- createSrcDirectory(sbtRoot)
-             _ <- copySourceIntoSclaDirectory(src, scalaDir)
+             _ <- copySourceIntoScalaDirectory(src, scalaDir)
       buildSbt <- createBuildFile(sbtRoot)
+             _ <- createSbtRunner(sbtRoot).flatTap(makeExecutable)
+             _ <- runCompilerWithSbt(sbtRoot)
     } yield sbtRoot
 
-  private def copySourceIntoSclaDirectory(src: String, scalaDir: File): F[Unit] =
+  private def copySourceIntoScalaDirectory(src: String, scalaDir: File): F[Unit] =
     F.delay {
       File(src).copyToDirectory(scalaDir)
+    }
+
+  private def createSbtRunner(sbtRoot: File): F[File] =
+    F.delay {
+      (sbtRoot / "sbt-runner.sh")
+        .createIfNotExists()
+        .appendLine("#!/usr/bin/env bash")
+        .appendLine(s"cd ${sbtRoot.toString}")
+        .appendLine("sbt test")
+    }
+
+  private def makeExecutable(f: File): F[Unit] =
+    F.delay {
+      chmod_+(PosixFilePermission.OWNER_EXECUTE, f)
+    }
+
+  private def runCompilerWithSbt(sbtRoot: File): F[Unit] =
+    F.delay {
+      val file = (sbtRoot / "sbt-runner.sh").toString
+
+      println(Seq(file).!!)
     }
 }
