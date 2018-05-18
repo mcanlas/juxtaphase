@@ -11,7 +11,7 @@ object Main extends RunUnsafeSync {
           src <- env.getSourceFile(args)
           opt <- env.detectDisassemblyOptions
 
-          tmp <- cpl.runCompilerWithSbt(src)
+          tmp <- cpl.runCompilerWithSbt(src).map(_.targetDir)
           _ = println(tmp)
 
             _ <- cpl.runCompiler(src, tmp)

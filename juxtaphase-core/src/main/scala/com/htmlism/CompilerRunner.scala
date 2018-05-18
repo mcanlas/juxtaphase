@@ -11,19 +11,20 @@ import better.files.File
 import better.files.Dsl._
 
 class CompilerRunner[F[_]](implicit F: Sync[F]) {
-  private def createTempDirectory: F[File] =
+  private def createTempDirectory: F[SbtProject] =
     F.delay {
-      File.newTemporaryDirectory()
+      new SbtProject
     }
 
-  private def createSrcDirectory(root: File): F[File] =
+  private def createSrcDirectory(proj: SbtProject): F[File] =
     F.delay {
-      (root / "src" / "main" / "scala").createIfNotExists(asDirectory = true)
+      proj.scalaDir.createIfNotExists(asDirectory = true)
     }
 
-  private def createBuildFile(sbtRoot: File): F[File] =
+  private def createBuildFile(proj: SbtProject): F[File] =
     F.delay {
-      (sbtRoot / "build.sbt")
+      proj
+        .buildFile
         .createIfNotExists()
         .appendLine("scalaVersion := \"2.12.6\"")
         .appendLine("scalacOptions += \"-Xprint:1\"")
@@ -36,7 +37,7 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
       println(Seq("scalac", "-Xprint:" + allPhases, "-d", tmpDir.pathAsString, srcFile).!!)
     }
 
-  def runCompilerWithSbt(src: String): F[File] =
+  def runCompilerWithSbt(src: String): F[SbtProject] =
     createTempDirectory
       .flatTap(r => createSrcDirectory(r) >>= copySourceIntoScalaDirectory(src))
       .flatTap(createBuildFile)
@@ -48,12 +49,13 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
       File(src).copyToDirectory(scalaDir)
     }
 
-  private def createSbtRunner(sbtRoot: File): F[File] =
+  private def createSbtRunner(proj: SbtProject): F[File] =
     F.delay {
-      (sbtRoot / "sbt-runner.sh")
+      proj
+        .sbtRunner
         .createIfNotExists()
         .appendLine("#!/usr/bin/env bash")
-        .appendLine(s"cd ${sbtRoot.toString}")
+        .appendLine(s"cd ${proj.path}")
         .appendLine("sbt test")
     }
 
@@ -62,9 +64,9 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
       chmod_+(PosixFilePermission.OWNER_EXECUTE, f)
     }
 
-  private def runCompilerWithSbt(sbtRoot: File): F[Unit] =
+  private def runCompilerWithSbt(proj: SbtProject): F[Unit] =
     F.delay {
-      val file = (sbtRoot / "sbt-runner.sh").toString
+      val file = proj.sbtRunner.pathAsString
 
       println(Seq(file).!!)
     }
