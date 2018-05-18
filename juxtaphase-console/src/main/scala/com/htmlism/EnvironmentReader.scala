@@ -7,15 +7,18 @@ class EnvironmentReader[F[_]](implicit F: Sync[F]) {
 
   private val prefix = "JK_"
 
-  private val keys =
+  private val disassemblyKeys =
     Map[String, Builder[DisassemblyOptions]](
       "PV" -> { _.copy(showPrivateMembers = true) },
       "C" -> { _.copy(printByteCode = true) },
       "V" -> { _.copy(verbose = true) })
 
   def detectDisassemblyOptions: F[DisassemblyOptions] =
+    detectOptions(DisassemblyOptions.empty)(disassemblyKeys)
+
+  private def detectOptions[A](empty: A)(keys: Map[String, Builder[A]]): F[A] =
     F.delay {
-      keys.foldLeft(DisassemblyOptions.empty) { (acc, kv) =>
+      keys.foldLeft(empty) { (acc, kv) =>
         if (keyExists(kv._1))
           kv._2(acc)
         else
