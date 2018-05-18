@@ -4,7 +4,6 @@ import better.files.File
 
 class SbtProject {
   private val root = File.newTemporaryDirectory()
-  println(root)
 
   lazy val path: String = root.pathAsString
 
