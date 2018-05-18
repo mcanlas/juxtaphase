@@ -2,9 +2,7 @@ package com.htmlism
 
 import better.files.File
 
-class SbtProject {
-  private val root = File.newTemporaryDirectory()
-
+class SbtProject(root: File) {
   lazy val path: String = root.pathAsString
 
   lazy val buildFile: File = root / "build.sbt"

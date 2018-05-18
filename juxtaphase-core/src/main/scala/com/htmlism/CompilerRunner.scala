@@ -11,9 +11,9 @@ import better.files.File
 import better.files.Dsl._
 
 class CompilerRunner[F[_]](implicit F: Sync[F]) {
-  private def createTempDirectory: F[SbtProject] =
+  private def createTempDirectory: F[File] =
     F.delay {
-      new SbtProject
+      File.newTemporaryDirectory()
     }
 
   private def createSrcDirectory(proj: SbtProject): F[File] =
@@ -34,6 +34,7 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
 
   def runCompilerWithSbt(src: String): F[SbtProject] =
     createTempDirectory
+      .map(new SbtProject(_))
       .flatTap(r => createSrcDirectory(r) >>= copySourceIntoScalaDirectory(src))
       .flatTap(createBuildFile)
       .flatTap(r => createSbtRunner(r) >>= makeExecutable)
