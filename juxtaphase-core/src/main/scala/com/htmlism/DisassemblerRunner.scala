@@ -8,9 +8,10 @@ import cats.implicits._
 import better.files.File
 
 class DisassemblerRunner[F[_]](implicit F: Sync[F]) {
-  def findClassFiles(root: File): F[List[File]] =
+  def findClassFiles(proj: SbtProject): F[List[File]] =
     F.delay {
-      root
+      proj
+        .targetDir
         .listRecursively
         .filter(f => f.extension.contains(".class"))
         .toList

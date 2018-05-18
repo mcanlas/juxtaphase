@@ -32,11 +32,6 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
 
   private val allPhases = (1 to 2).mkString(",")
 
-  def runCompiler(srcFile: String, tmpDir: File): F[Unit] =
-    F.delay {
-      println(Seq("scalac", "-Xprint:" + allPhases, "-d", tmpDir.pathAsString, srcFile).!!)
-    }
-
   def runCompilerWithSbt(src: String): F[SbtProject] =
     createTempDirectory
       .flatTap(r => createSrcDirectory(r) >>= copySourceIntoScalaDirectory(src))
