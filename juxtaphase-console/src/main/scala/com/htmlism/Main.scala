@@ -9,11 +9,12 @@ object Main extends RunUnsafeSync {
 
   def mainSync[F[_] : Sync](args: Array[String]): F[Unit] =
     for {
-      env <- Sync[F].pure { new EnvironmentReader[F] }
-      src <- env.getSourceFile(args)
-      opt <- env.detectDisassemblyOptions
-      cpl =  new CompilerRunner[F]
-      dis =  new DisassemblerRunner[F]
-        _ <- cpl.runCompilerWithSbt(src) >>= dis.findClassFiles >>= dis.disassemble(opt)
+         env <- Sync[F].pure { new EnvironmentReader[F] }
+         src <- env.getSourceFile(args)
+      cmpOpt <- env.detectCompilerOptions
+      disOpt <- env.detectDisassemblyOptions
+         cpl =  new CompilerRunner[F]
+         dis =  new DisassemblerRunner[F]
+           _ <- cpl.runCompilerWithSbt(src) >>= dis.findClassFiles >>= dis.disassemble(disOpt)
     } yield ()
 }
