@@ -17,12 +17,12 @@ class DisassemblerRunner[F[_]](implicit F: Sync[F]) {
         .sortBy(_.pathAsString)
     }
 
-  def disassemble(opt: DisassemblyOptions, fs: List[File]): F[Unit] =
+  def disassemble(opt: DisassemblyOptions)(fs: List[File]): F[Unit] =
     fs
-      .traverse(disassemble(opt))
+      .traverse(disassembleEach(opt))
       .void
 
-  def disassemble(opt: DisassemblyOptions)(f: File): F[Unit] =
+  private def disassembleEach(opt: DisassemblyOptions)(f: File): F[Unit] =
     F.delay {
       println(("javap" +: opt.flags :+ f.pathAsString).!!)
     }

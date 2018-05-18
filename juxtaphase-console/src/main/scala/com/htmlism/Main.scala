@@ -1,6 +1,7 @@
 package com.htmlism
 
 import cats.effect._
+import cats.implicits._
 
 object Main extends RunUnsafeSync {
   def mainIo(args: Array[String]): IO[Unit] =
@@ -14,8 +15,7 @@ object Main extends RunUnsafeSync {
           _ = println(tmp)
 
             _ <- cpl.runCompiler(src, tmp)
-           cs <- dis.findClassFiles(tmp)
-            _ <- dis.disassemble(opt, cs)
+            _ <- dis.findClassFiles(tmp) >>= dis.disassemble(opt)
         } yield ()
       }
     }
