@@ -21,22 +21,23 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
       proj.scalaDir.createIfNotExists(asDirectory = true)
     }
 
-  private def createBuildFile(proj: SbtProject): F[File] =
+  private def createBuildFile(opt: CompilerOptions)(proj: SbtProject): F[File] =
     F.delay {
       proj
         .buildFile
         .createIfNotExists()
-        .appendLine("scalaVersion := \"2.12.6\"")
-        .appendLine("scalacOptions += \"-Xprint:1\"")
+        .appendLine("scalaVersion := \"" + opt.scalaVersion + "\"")
+        .appendLine("scalacOptions += \"-Xprint:" + opt.phases.mkString(",") + "\"")
     }
 
   private val allPhases = (1 to 2).mkString(",")
 
-  def runCompilerWithSbt(src: String): F[SbtProject] =
+  def runCompilerWithSbt(opt: CompilerOptions)(src: String): F[SbtProject] =
     createTempDirectory
+      .map { f => println(f); f }
       .map(new SbtProject(_))
       .flatTap(r => createSrcDirectory(r) >>= copySourceIntoScalaDirectory(src))
-      .flatTap(createBuildFile)
+      .flatTap(createBuildFile(opt))
       .flatTap(r => createSbtRunner(r) >>= makeExecutable)
       .flatTap(runCompilerWithSbt)
 

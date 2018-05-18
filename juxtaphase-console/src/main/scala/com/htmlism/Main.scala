@@ -15,6 +15,6 @@ object Main extends RunUnsafeSync {
       disOpt <- env.detectDisassemblyOptions
          cpl =  new CompilerRunner[F]
          dis =  new DisassemblerRunner[F]
-           _ <- cpl.runCompilerWithSbt(src) >>= dis.findClassFiles >>= dis.disassemble(disOpt)
+           _ <- cpl.runCompilerWithSbt(cmpOpt)(src) >>= dis.findClassFiles >>= dis.disassemble(disOpt)
     } yield ()
 }
