@@ -30,8 +30,6 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
         .appendLine("scalacOptions += \"-Xprint:" + opt.phases.mkString(",") + "\"")
     }
 
-  private val allPhases = (1 to 2).mkString(",")
-
   def runCompilerWithSbt(opt: CompilerOptions)(src: String): F[SbtProject] =
     createTempDirectory
       .map { f => println(f); f }
