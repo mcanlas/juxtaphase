@@ -50,11 +50,11 @@ class EnvironmentReader[F[_]](implicit F: Sync[F]) {
     }
 
   def getSourceFile(args: List[String]): F[String] =
-    F.delay {
-      args
-        .lift(0)
-        .getOrElse(throw new IllegalArgumentException("need to specify a file"))
-    }
+    args
+      .headOption
+      .fold {
+        F.raiseError[String](new IllegalArgumentException("need to specify a file"))
+      }(F.pure)
 
   private def keyExists(k: String): Boolean =
     Option(System.getenv(prefix + k)).isDefined
