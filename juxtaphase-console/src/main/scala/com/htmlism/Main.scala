@@ -3,6 +3,11 @@ package com.htmlism
 import cats.effect._
 import cats.implicits._
 
+/**
+ * {{{
+ *   sbt "juxtaphase-console/run juxtaphase-core/src/main/scala/com/htmlism/CompilerOptions.scala"
+ * }}}
+ */
 object Main extends IOApp {
   def run(args: List[String]): IO[ExitCode] =
     mainSync[IO](args)
