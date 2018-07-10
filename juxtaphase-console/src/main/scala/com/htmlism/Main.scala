@@ -3,11 +3,12 @@ package com.htmlism
 import cats.effect._
 import cats.implicits._
 
-object Main extends RunUnsafeSync {
-  def mainIo(args: Array[String]): IO[Unit] =
+object Main extends IOApp {
+  def run(args: List[String]): IO[ExitCode] =
     mainSync[IO](args)
+      .as(ExitCode.Success)
 
-  def mainSync[F[_] : Sync](args: Array[String]): F[Unit] =
+  def mainSync[F[_] : Sync](args: List[String]): F[Unit] =
     for {
          env <- Sync[F].pure { new EnvironmentReader[F] }
          src <- env.getSourceFile(args)

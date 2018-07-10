@@ -25,7 +25,7 @@ lazy val commonSettings = Seq(
   crossScalaVersions := Seq("2.11.12", "2.12.6"))
 
 lazy val catsIo =
-  Seq(libraryDependencies += "org.typelevel" %% "cats-effect" % "1.0.0-RC")
+  Seq(libraryDependencies += "org.typelevel" %% "cats-effect" % "1.0.0-RC2")
 
 lazy val scalaFileIo =
   Seq(libraryDependencies += "com.github.pathikrit" %% "better-files" % "3.4.0")

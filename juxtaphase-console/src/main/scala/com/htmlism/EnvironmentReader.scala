@@ -49,7 +49,7 @@ class EnvironmentReader[F[_]](implicit F: Sync[F]) {
       }
     }
 
-  def getSourceFile(args: Array[String]): F[String] =
+  def getSourceFile(args: List[String]): F[String] =
     F.delay {
       args
         .lift(0)
