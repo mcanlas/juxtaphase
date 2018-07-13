@@ -17,10 +17,10 @@ object Main extends IOApp {
 
 object Pipeline {
   def start[F[_] : Sync]: List[String] => F[ExitCode] =
-    EnvironmentReader.getSourceFile _ andThen toIO
+    EnvironmentReader.getSourceFile _ andThen toIO[F]
 
   private def toIO[F[_] : Sync](src: Option[String]) =
-    src.fold(zero)(mainSync)
+    src.fold(zero)(mainSync[F])
 
   private def zero[F[_]](implicit F: Sync[F]) =
     F
