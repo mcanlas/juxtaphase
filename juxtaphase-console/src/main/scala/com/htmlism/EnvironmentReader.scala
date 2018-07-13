@@ -3,10 +3,10 @@ package com.htmlism
 import cats.effect._
 
 class EnvironmentReader[F[_]](implicit F: Sync[F]) {
+  import EnvironmentReader._
+
   type Builder[A] = A => A
   type StrBuilder[A] = (A, String) => A
-
-  private val prefix = "JK_"
 
   private val disassemblyKeys =
     Map[String, Builder[DisassemblyOptions]](
@@ -55,10 +55,14 @@ class EnvironmentReader[F[_]](implicit F: Sync[F]) {
       .fold {
         F.raiseError[String](new IllegalArgumentException("need to specify a file"))
       }(F.pure)
+}
 
-  private def keyExists(k: String): Boolean =
+object EnvironmentReader {
+  private val prefix = "JK_"
+
+  def keyExists(k: String): Boolean =
     Option(System.getenv(prefix + k)).isDefined
 
-  private def valueAt(k: String): Option[String] =
+  def valueAt(k: String): Option[String] =
     Option(System.getenv(prefix + k))
 }
