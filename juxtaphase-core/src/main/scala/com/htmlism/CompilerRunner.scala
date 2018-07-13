@@ -34,9 +34,9 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
     createTempDirectory
       .map { f => println(f); f }
       .map(new SbtProject(_))
-      .flatTap(r => createSrcDirectory(r) >>= copySourceIntoScalaDirectory(src))
+      .flatTap(createSrcDirectory(_) >>= copySourceIntoScalaDirectory(src))
       .flatTap(createBuildFile(opt))
-      .flatTap(r => createSbtRunner(r) >>= makeExecutable)
+      .flatTap(createSbtRunner(_) >>= makeExecutable)
       .flatTap(runCompilerWithSbt)
 
   private def copySourceIntoScalaDirectory(src: String)(scalaDir: File): F[Unit] =
