@@ -17,17 +17,17 @@ object Main extends IOApp {
 
 class Pipeline[F[_]](implicit F: Sync[F]) {
   def func: List[String] => F[ExitCode] =
-    EnvironmentReader.getSourceFile _ andThen toIO
+    EnvironmentReader.getSourceFile _ andThen maybeRun
 
-  private def toIO(src: Option[String]) =
-    src.fold(zero)(mainSync)
+  private def maybeRun(src: Option[String]) =
+    src.fold(zero)(run)
 
   private def zero =
     F
       .delay { throw new IllegalArgumentException("need to specify a file") }
       .as(ExitCode.Error)
 
-  private def mainSync(src: String) = {
+  private def run(src: String) = {
     val env = new EnvironmentReader
 
     val cmpOpt = env.detectCompilerOptions
