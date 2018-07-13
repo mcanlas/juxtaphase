@@ -10,24 +10,24 @@ import cats.implicits._
  */
 object Main extends IOApp {
   def run(args: List[String]): IO[ExitCode] =
-    Pipeline
-      .start[IO]
+    new Pipeline[IO]
+      .func
       .apply(args)
 }
 
-object Pipeline {
-  def start[F[_] : Sync]: List[String] => F[ExitCode] =
-    EnvironmentReader.getSourceFile _ andThen toIO[F]
+class Pipeline[F[_]](implicit F: Sync[F]) {
+  def func: List[String] => F[ExitCode] =
+    EnvironmentReader.getSourceFile _ andThen toIO
 
-  private def toIO[F[_] : Sync](src: Option[String]) =
-    src.fold(zero)(mainSync[F])
+  private def toIO(src: Option[String]) =
+    src.fold(zero)(mainSync)
 
-  private def zero[F[_]](implicit F: Sync[F]) =
+  private def zero =
     F
       .delay { throw new IllegalArgumentException("need to specify a file") }
       .as(ExitCode.Error)
 
-  private def mainSync[F[_] : Sync](src: String) = {
+  private def mainSync(src: String) = {
     val env = new EnvironmentReader
 
     val cmpOpt = env.detectCompilerOptions
