@@ -48,13 +48,6 @@ class EnvironmentReader[F[_]](implicit F: Sync[F]) {
         }
       }
     }
-
-  def getSourceFile(args: List[String]): F[String] =
-    args
-      .headOption
-      .fold {
-        F.raiseError[String](new IllegalArgumentException("need to specify a file"))
-      }(F.pure)
 }
 
 object EnvironmentReader {
@@ -65,4 +58,7 @@ object EnvironmentReader {
 
   def valueAt(k: String): Option[String] =
     Option(System.getenv(prefix + k))
+
+  def getSourceFile(args: List[String]): Option[String] =
+    args.headOption
 }

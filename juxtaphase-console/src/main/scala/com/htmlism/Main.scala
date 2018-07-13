@@ -10,17 +10,30 @@ import cats.implicits._
  */
 object Main extends IOApp {
   def run(args: List[String]): IO[ExitCode] =
-    mainSync[IO](args)
-      .as(ExitCode.Success)
+    Pipeline
+      .start[IO]
+      .apply(args)
+}
 
-  def mainSync[F[_] : Sync](args: List[String]): F[Unit] =
+object Pipeline {
+  def start[F[_] : Sync]: List[String] => F[ExitCode] =
+    EnvironmentReader.getSourceFile _ andThen toIO
+
+  private def toIO[F[_] : Sync](src: Option[String]) =
+    src.fold(zero)(mainSync)
+
+  private def zero[F[_]](implicit F: Sync[F]) =
+    F
+      .delay[Unit] { throw new IllegalArgumentException("need to specify a file") }
+      .as(ExitCode.Error)
+
+  private def mainSync[F[_] : Sync](src: String) =
     for {
-         env <- Sync[F].pure { new EnvironmentReader[F] }
-         src <- env.getSourceFile(args)
+      env <- Sync[F].pure { new EnvironmentReader[F] }
       cmpOpt <- env.detectCompilerOptions
       disOpt <- env.detectDisassemblyOptions
-         cpl =  new CompilerRunner[F]
-         dis =  new DisassemblerRunner[F]
-           _ <- cpl.runCompilerWithSbt(cmpOpt)(src) >>= dis.findClassFiles >>= dis.disassemble(disOpt)
-    } yield ()
+      cpl =  new CompilerRunner[F]
+      dis =  new DisassemblerRunner[F]
+      _ <- cpl.runCompilerWithSbt(cmpOpt)(src) >>= dis.findClassFiles >>= dis.disassemble(disOpt)
+    } yield ExitCode.Success
 }
