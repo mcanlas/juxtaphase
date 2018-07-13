@@ -1,8 +1,6 @@
 package com.htmlism
 
-import cats.effect._
-
-class EnvironmentReader[F[_]](implicit F: Sync[F]) {
+class EnvironmentReader {
   import EnvironmentReader._
 
   type Builder[A] = A => A
@@ -26,26 +24,22 @@ class EnvironmentReader[F[_]](implicit F: Sync[F]) {
       .toSet[String] // toInt needs type hint
       .map(_.toInt)
 
-  def detectDisassemblyOptions: F[DisassemblyOptions] =
+  def detectDisassemblyOptions: DisassemblyOptions =
     detectOptions(DisassemblyOptions.empty)(disassemblyKeys)
 
-  private def detectOptions[A](empty: A)(keys: Map[String, Builder[A]]): F[A] =
-    F.delay {
-      keys.foldLeft(empty) { (acc, kv) =>
-        if (keyExists(kv._1))
-          kv._2(acc)
-        else
-          acc
-      }
+  private def detectOptions[A](empty: A)(keys: Map[String, Builder[A]]): A =
+    keys.foldLeft(empty) { (acc, kv) =>
+      if (keyExists(kv._1))
+        kv._2(acc)
+      else
+        acc
     }
 
-  def detectCompilerOptions: F[CompilerOptions] =
-    F.delay {
-      compilerKeys.foldLeft(CompilerOptions.empty) { (acc, kv) =>
-        valueAt(kv._1) match {
-          case Some(v) => kv._2(acc, v)
-          case None => acc
-        }
+  def detectCompilerOptions: CompilerOptions =
+    compilerKeys.foldLeft(CompilerOptions.empty) { (acc, kv) =>
+      valueAt(kv._1) match {
+        case Some(v) => kv._2(acc, v)
+        case None => acc
       }
     }
 }

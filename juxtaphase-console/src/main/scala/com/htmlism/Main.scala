@@ -27,13 +27,18 @@ object Pipeline {
       .delay[Unit] { throw new IllegalArgumentException("need to specify a file") }
       .as(ExitCode.Error)
 
-  private def mainSync[F[_] : Sync](src: String) =
-    for {
-      env <- Sync[F].pure { new EnvironmentReader[F] }
-      cmpOpt <- env.detectCompilerOptions
-      disOpt <- env.detectDisassemblyOptions
-      cpl =  new CompilerRunner[F]
-      dis =  new DisassemblerRunner[F]
-      _ <- cpl.runCompilerWithSbt(cmpOpt)(src) >>= dis.findClassFiles >>= dis.disassemble(disOpt)
-    } yield ExitCode.Success
+  private def mainSync[F[_] : Sync](src: String) = {
+    val env = new EnvironmentReader
+
+    val cmpOpt = env.detectCompilerOptions
+    val disOpt = env.detectDisassemblyOptions
+
+    val cpl = new CompilerRunner[F]
+    val dis = new DisassemblerRunner[F]
+
+    (cpl.runCompilerWithSbt(cmpOpt)(src)
+      >>= dis.findClassFiles
+      >>= dis.disassemble(disOpt))
+      .as(ExitCode.Success)
+  }
 }
