@@ -24,7 +24,7 @@ class Pipeline[F[_]](implicit F: Sync[F]) {
 
   private def zero =
     F
-      .delay { throw new IllegalArgumentException("need to specify a file") }
+      .delay { Console.err.println("need to specify a file") }
       .as(ExitCode.Error)
 
   private def run(src: String) = {
