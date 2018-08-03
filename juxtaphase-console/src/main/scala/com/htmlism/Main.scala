@@ -2,6 +2,7 @@ package com.htmlism
 
 import cats.effect._
 import cats.implicits._
+import mouse.all._
 
 /**
  * {{{
@@ -11,13 +12,12 @@ import cats.implicits._
 object Main extends IOApp {
   def run(args: List[String]): IO[ExitCode] =
     new Pipeline[IO]
-      .func
-      .apply(args)
+      .process(args)
 }
 
 class Pipeline[F[_]](implicit F: Sync[F]) {
-  def func: List[String] => F[ExitCode] =
-    EnvironmentReader.getSourceFile _ andThen maybeRun
+  def process(args: List[String]): F[ExitCode] =
+    args |> EnvironmentReader.getSourceFile |> maybeRun
 
   private def maybeRun(src: Option[String]) =
     src.fold(zero)(run)
