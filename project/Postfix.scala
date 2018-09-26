@@ -7,8 +7,7 @@ import play.sbt.PlayImport._
 object postfix {
   implicit class PlayOps(p: Project) {
     def enablePlay: Project =
-      p
-        .enablePlugins(PlayScala)
+      p.enablePlugins(PlayScala)
         .settings(libraryDependencies += guice)
   }
 }
