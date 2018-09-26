@@ -31,3 +31,5 @@ lazy val catsIo =
 
 lazy val scalaFileIo =
   Seq(libraryDependencies += "com.github.pathikrit" %% "better-files" % "3.6.0")
+
+scalafmtOnCompile := true
