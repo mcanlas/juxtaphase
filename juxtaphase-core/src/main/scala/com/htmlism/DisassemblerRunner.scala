@@ -17,8 +17,7 @@ class DisassemblerRunner[F[_]](implicit F: Sync[F]) {
     }
 
   def disassemble(opt: DisassemblyOptions)(fs: List[File]): F[Unit] =
-    fs.traverse(disassembleEach(opt))
-      .void
+    fs.traverse(disassembleEach(opt)).void
 
   private def disassembleEach(opt: DisassemblyOptions)(f: File): F[Unit] =
     F.delay {
