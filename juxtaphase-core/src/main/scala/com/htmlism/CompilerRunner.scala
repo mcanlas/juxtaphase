@@ -23,31 +23,33 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
 
   private def createBuildFile(opt: CompilerOptions)(proj: SbtProject): F[File] =
     F.delay {
-      proj
-        .buildFile
+      proj.buildFile
         .createIfNotExists()
         .appendLine("scalaVersion := \"" + opt.scalaVersion + "\"")
-        .appendLine("scalacOptions += \"-Xprint:" + opt.phases.mkString(",") + "\"")
+        .appendLine(
+          "scalacOptions += \"-Xprint:" + opt.phases.mkString(",") + "\"")
     }
 
   def runCompilerWithSbt(opt: CompilerOptions)(src: String): F[SbtProject] =
     createTempDirectory
-      .map { f => println(f); f }
+      .map { f =>
+        println(f); f
+      }
       .map(new SbtProject(_))
       .flatTap(createSrcDirectory(_) >>= copySourceIntoScalaDirectory(src))
       .flatTap(createBuildFile(opt))
       .flatTap(createSbtRunner(_) >>= makeExecutable)
       .flatTap(runCompilerWithSbt)
 
-  private def copySourceIntoScalaDirectory(src: String)(scalaDir: File): F[Unit] =
+  private def copySourceIntoScalaDirectory(src: String)(
+      scalaDir: File): F[Unit] =
     F.delay {
       File(src).copyToDirectory(scalaDir)
     }
 
   private def createSbtRunner(proj: SbtProject): F[File] =
     F.delay {
-      proj
-        .sbtRunner
+      proj.sbtRunner
         .createIfNotExists()
         .appendLine("#!/usr/bin/env bash")
         .appendLine(s"cd ${proj.path}")

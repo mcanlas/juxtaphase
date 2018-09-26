@@ -20,6 +20,7 @@ lazy val web = projectAt("web")
 def projectAt(s: String) = Project("juxtaphase-" + s, file("juxtaphase-" + s))
 
 lazy val commonSettings = Seq(
+  scalafmtOnCompile := true,
   organization := "com.htmlism",
   scalaVersion := "2.12.6",
   crossScalaVersions := Seq("2.11.12", "2.12.6"))
@@ -31,5 +32,3 @@ lazy val catsIo =
 
 lazy val scalaFileIo =
   Seq(libraryDependencies += "com.github.pathikrit" %% "better-files" % "3.6.0")
-
-scalafmtOnCompile := true

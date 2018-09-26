@@ -5,10 +5,10 @@ import cats.implicits._
 import mouse.all._
 
 /**
- * {{{
- *   sbt "juxtaphase-console/run juxtaphase-core/src/main/scala/com/htmlism/CompilerOptions.scala"
- * }}}
- */
+  * {{{
+  *   sbt "juxtaphase-console/run juxtaphase-core/src/main/scala/com/htmlism/CompilerOptions.scala"
+  * }}}
+  */
 object Main extends IOApp {
   def run(args: List[String]): IO[ExitCode] =
     new Pipeline[IO]
@@ -23,8 +23,7 @@ class Pipeline[F[_]](implicit F: Sync[F]) {
     src.fold(zero)(run)
 
   private def zero =
-    F
-      .delay { Console.err.println("need to specify a file") }
+    F.delay { Console.err.println("need to specify a file") }
       .as(ExitCode.Error)
 
   private def run(src: String) = {

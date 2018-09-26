@@ -9,6 +9,6 @@ object CompilerOptions {
 }
 
 case class CompilerOptions(
-  scalaVersion: String,
-  phases: Set[Int]
+    scalaVersion: String,
+    phases: Set[Int]
 )

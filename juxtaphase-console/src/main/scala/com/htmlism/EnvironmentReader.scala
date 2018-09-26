@@ -3,24 +3,28 @@ package com.htmlism
 class EnvironmentReader {
   import EnvironmentReader._
 
-  type Builder[A] = A => A
+  type Builder[A]    = A => A
   type StrBuilder[A] = (A, String) => A
 
   private val disassemblyKeys =
-    Map[String, Builder[DisassemblyOptions]](
-      "PV" -> { _.copy(showPrivateMembers = true) },
-      "C" -> { _.copy(printByteCode = true) },
-      "V" -> { _.copy(verbose = true) })
+    Map[String, Builder[DisassemblyOptions]]("PV" -> {
+      _.copy(showPrivateMembers = true)
+    }, "C" -> { _.copy(printByteCode = true) }, "V" -> {
+      _.copy(verbose = true)
+    })
 
   private val compilerKeys =
     Map[String, StrBuilder[CompilerOptions]](
-      "VER" -> { (o, s) => o.copy(scalaVersion = s) },
-      "PHASES" -> { (o, s) => o.copy(phases = toIntSet(s)) }
+      "VER" -> { (o, s) =>
+        o.copy(scalaVersion = s)
+      },
+      "PHASES" -> { (o, s) =>
+        o.copy(phases = toIntSet(s))
+      }
     )
 
-  private def toIntSet(s: String)  =
-    s
-      .split(",")
+  private def toIntSet(s: String) =
+    s.split(",")
       .toSet[String] // toInt needs type hint
       .map(_.toInt)
 
@@ -39,7 +43,7 @@ class EnvironmentReader {
     compilerKeys.foldLeft(CompilerOptions.empty) { (acc, kv) =>
       valueAt(kv._1) match {
         case Some(v) => kv._2(acc, v)
-        case None => acc
+        case None    => acc
       }
     }
 }
