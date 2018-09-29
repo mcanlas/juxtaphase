@@ -26,8 +26,7 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
       proj.buildFile
         .createIfNotExists()
         .appendLine("scalaVersion := \"" + opt.scalaVersion + "\"")
-        .appendLine(
-          "scalacOptions += \"-Xprint:" + opt.phases.mkString(",") + "\"")
+        .appendLine("scalacOptions += \"-Xprint:" + opt.phases.mkString(",") + "\"")
     }
 
   def runCompilerWithSbt(opt: CompilerOptions)(src: String): F[SbtProject] =
@@ -41,8 +40,7 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
       .flatTap(createSbtRunner(_) >>= makeExecutable)
       .flatTap(runCompilerWithSbt)
 
-  private def copySourceIntoScalaDirectory(src: String)(
-      scalaDir: File): F[Unit] =
+  private def copySourceIntoScalaDirectory(src: String)(scalaDir: File): F[Unit] =
     F.delay {
       File(src).copyToDirectory(scalaDir)
     }
