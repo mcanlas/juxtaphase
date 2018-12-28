@@ -31,4 +31,4 @@ lazy val catsIo =
                                 "org.typelevel" %% "cats-effect" % "1.1.0"))
 
 lazy val scalaFileIo =
-  Seq(libraryDependencies += "com.github.pathikrit" %% "better-files" % "3.6.0")
+  Seq(libraryDependencies += "com.github.pathikrit" %% "better-files" % "3.7.0")
