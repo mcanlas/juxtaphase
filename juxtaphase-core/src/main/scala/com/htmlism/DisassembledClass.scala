@@ -1,3 +1,3 @@
 package com.htmlism
 
-case class DisassembledClass(path: String, disassembly: String)
+final case class DisassembledClass(path: String, disassembly: String)

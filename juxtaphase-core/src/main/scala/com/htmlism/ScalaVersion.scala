@@ -1,3 +1,3 @@
 package com.htmlism
 
-case class ScalaVersion(v: String)
+final case class ScalaVersion(v: String)

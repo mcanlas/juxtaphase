@@ -8,7 +8,7 @@ object CompilerOptions {
     CompilerOptions(defaultScalaVersion, Set.empty)
 }
 
-case class CompilerOptions(
+final case class CompilerOptions(
     scalaVersion: String,
     phases: Set[Int]
 )

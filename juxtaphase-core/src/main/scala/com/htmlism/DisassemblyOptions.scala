@@ -9,7 +9,7 @@ object DisassemblyOptions {
   val empty: DisassemblyOptions = DisassemblyOptions(verbose = false, showPrivateMembers = false, printByteCode = false)
 }
 
-case class DisassemblyOptions(verbose: Boolean, showPrivateMembers: Boolean, printByteCode: Boolean) {
+final case class DisassemblyOptions(verbose: Boolean, showPrivateMembers: Boolean, printByteCode: Boolean) {
   def flags: Seq[String] =
     DisassemblyOptions.flags.foldLeft(Seq[String]()) { (acc, kv) =>
       if (kv._2(this))

@@ -1,3 +1,3 @@
 package com.htmlism
 
-case class JxRequest(scalaVersion: ScalaVersion, code: String)
+final case class JxRequest(scalaVersion: ScalaVersion, code: String)
