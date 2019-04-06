@@ -17,6 +17,12 @@ lazy val web = projectAt("web")
   .settings(commonSettings: _*)
   .enablePlay
   .dependsOn(core)
+  .settings(scalacOptions -= "-Ywarn-unused-import") // silence unused import warnings from play routes
+  .settings(scalacOptions -= "-Ywarn-unused:imports") // silence unused import warnings from play routes
+  .settings(scalacOptions -= "-Ywarn-unused:locals")
+  .settings(scalacOptions -= "-Wunused:locals")
+  .settings(scalacOptions -= "-Ywarn-unused:privates")
+  .settings(scalacOptions -= "-Wunused:privates")
 
 def projectAt(s: String) = Project("juxtaphase-" + s, file("juxtaphase-" + s))
 
