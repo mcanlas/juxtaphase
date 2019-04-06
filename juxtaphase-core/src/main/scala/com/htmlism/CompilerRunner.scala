@@ -42,7 +42,8 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
 
   private def copySourceIntoScalaDirectory(src: String)(scalaDir: File): F[Unit] =
     F.delay {
-      File(src).copyToDirectory(scalaDir)
+      val _ = File(src)
+        .copyToDirectory(scalaDir)
     }
 
   private def createSbtRunner(proj: SbtProject): F[File] =
@@ -56,7 +57,7 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
 
   private def makeExecutable(f: File): F[Unit] =
     F.delay {
-      chmod_+(PosixFilePermission.OWNER_EXECUTE, f)
+      val _ = chmod_+(PosixFilePermission.OWNER_EXECUTE, f)
     }
 
   private def runCompilerWithSbt(proj: SbtProject): F[Unit] =
