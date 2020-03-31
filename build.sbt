@@ -29,7 +29,7 @@ def projectAt(s: String) = Project("juxtaphase-" + s, file("juxtaphase-" + s))
 lazy val commonSettings = Seq(scalafmtOnCompile := true,
                               organization := "com.htmlism",
                               scalaVersion := "2.12.10",
-                              crossScalaVersions := Seq("2.11.12", "2.12.10"))
+                              crossScalaVersions := Seq("2.12.10"))
 
 lazy val catsIo =
   Seq(
