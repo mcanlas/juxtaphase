@@ -33,7 +33,7 @@ lazy val commonSettings = Seq(scalafmtOnCompile := true,
 
 lazy val catsIo =
   Seq(
-    libraryDependencies ++= Seq("org.typelevel" %% "mouse"       % "0.24",
+    libraryDependencies ++= Seq("org.typelevel" %% "mouse"       % "0.25",
                                 "org.typelevel" %% "cats-effect" % "2.1.3"))
 
 lazy val scalaFileIo =
