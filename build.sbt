@@ -17,7 +17,7 @@ lazy val web = projectAt("web")
   .settings(commonSettings: _*)
   .enablePlay
   .dependsOn(core)
-  .settings(scalacOptions -= "-Ywarn-unused-import") // silence unused import warnings from play routes
+  .settings(scalacOptions -= "-Ywarn-unused-import")  // silence unused import warnings from play routes
   .settings(scalacOptions -= "-Ywarn-unused:imports") // silence unused import warnings from play routes
   .settings(scalacOptions -= "-Ywarn-unused:locals")
   .settings(scalacOptions -= "-Wunused:locals")
@@ -26,15 +26,15 @@ lazy val web = projectAt("web")
 
 def projectAt(s: String) = Project("juxtaphase-" + s, file("juxtaphase-" + s))
 
-lazy val commonSettings = Seq(scalafmtOnCompile := true,
-                              organization := "com.htmlism",
-                              scalaVersion := "2.12.12",
-                              crossScalaVersions := Seq("2.12.12"))
+lazy val commonSettings = Seq(
+  scalafmtOnCompile := true,
+  organization := "com.htmlism",
+  scalaVersion := "2.12.12",
+  crossScalaVersions := Seq("2.12.12")
+)
 
 lazy val catsIo =
-  Seq(
-    libraryDependencies ++= Seq("org.typelevel" %% "mouse"       % "0.25",
-                                "org.typelevel" %% "cats-effect" % "2.2.0-RC3"))
+  Seq(libraryDependencies ++= Seq("org.typelevel" %% "mouse" % "0.25", "org.typelevel" %% "cats-effect" % "2.2.0-RC3"))
 
 lazy val scalaFileIo =
   Seq(libraryDependencies += "com.github.pathikrit" %% "better-files" % "3.9.1")

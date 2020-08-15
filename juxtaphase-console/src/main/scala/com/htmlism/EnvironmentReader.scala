@@ -7,11 +7,15 @@ class EnvironmentReader {
   type StrBuilder[A] = (A, String) => A
 
   private val disassemblyKeys =
-    Map[String, Builder[DisassemblyOptions]]("PV" -> {
-      _.copy(showPrivateMembers = true)
-    }, "C" -> { _.copy(printByteCode = true) }, "V" -> {
-      _.copy(verbose = true)
-    })
+    Map[String, Builder[DisassemblyOptions]](
+      "PV" -> {
+        _.copy(showPrivateMembers = true)
+      },
+      "C" -> { _.copy(printByteCode = true) },
+      "V" -> {
+        _.copy(verbose = true)
+      }
+    )
 
   private val compilerKeys =
     Map[String, StrBuilder[CompilerOptions]](
