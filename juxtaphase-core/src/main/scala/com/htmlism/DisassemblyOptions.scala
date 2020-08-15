@@ -2,9 +2,13 @@ package com.htmlism
 
 object DisassemblyOptions {
   val flags: Map[String, DisassemblyOptions => Boolean] =
-    Map("v" -> { _.verbose }, "p" -> { _.showPrivateMembers }, "c" -> {
-      _.printByteCode
-    })
+    Map(
+      "v" -> { _.verbose },
+      "p" -> { _.showPrivateMembers },
+      "c" -> {
+        _.printByteCode
+      }
+    )
 
   val empty: DisassemblyOptions = DisassemblyOptions(verbose = false, showPrivateMembers = false, printByteCode = false)
 }
