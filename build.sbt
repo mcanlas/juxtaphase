@@ -25,7 +25,7 @@ lazy val web = projectAt("web")
     libraryDependencies ++= Seq(
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
       "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
-    ),
+    )
   )
 
 def projectAt(s: String) = Project("juxtaphase-" + s, file("juxtaphase-" + s))
@@ -41,9 +41,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val catsIo =
-  Seq(libraryDependencies ++= Seq(
-    "org.typelevel" %% "mouse" % "0.25",
-    "org.typelevel" %% "cats-effect" % "3.0.0-M4"))
+  Seq(libraryDependencies ++= Seq("org.typelevel" %% "mouse" % "0.25", "org.typelevel" %% "cats-effect" % "3.0.0-M4"))
 
 lazy val scalaFileIo =
   Seq(libraryDependencies += "com.github.pathikrit" %% "better-files" % "3.9.1")
