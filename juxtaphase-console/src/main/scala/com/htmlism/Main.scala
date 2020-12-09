@@ -2,7 +2,6 @@ package com.htmlism
 
 import cats.effect._
 import cats.implicits._
-import mouse.all._
 
 /**
   * {{{
@@ -17,7 +16,11 @@ object Main extends IOApp {
 
 class Pipeline[F[_]](implicit F: Sync[F]) {
   def process(args: List[String]): F[ExitCode] =
-    args |> EnvironmentReader.getSourceFile |> maybeRun
+    maybeRun {
+      EnvironmentReader.getSourceFile {
+        args
+      }
+    }
 
   private def maybeRun(src: Option[String]) =
     src.fold(zero)(run)
