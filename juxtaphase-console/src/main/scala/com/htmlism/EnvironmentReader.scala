@@ -3,7 +3,7 @@ package com.htmlism
 class EnvironmentReader {
   import EnvironmentReader._
 
-  type Builder[A]    = A => A
+  type Builder[A] = A => A
   type StrBuilder[A] = (A, String) => A
 
   private val disassemblyKeys =
@@ -47,7 +47,7 @@ class EnvironmentReader {
     compilerKeys.foldLeft(CompilerOptions.empty) { (acc, kv) =>
       valueAt(kv._1) match {
         case Some(v) => kv._2(acc, v)
-        case None    => acc
+        case None => acc
       }
     }
 }
