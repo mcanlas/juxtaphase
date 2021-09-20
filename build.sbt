@@ -31,7 +31,7 @@ lazy val web = projectAt("web")
 def projectAt(s: String) = Project("juxtaphase-" + s, file("juxtaphase-" + s))
 
 lazy val silencerVersion =
-  "1.7.1"
+  "1.7.6"
 
 lazy val commonSettings = Seq(
   scalafmtOnCompile := true,
