@@ -36,8 +36,8 @@ lazy val silencerVersion =
 lazy val commonSettings = Seq(
   scalafmtOnCompile := true,
   organization := "com.htmlism",
-  scalaVersion := "2.13.7",
-  crossScalaVersions := Seq("2.13.7")
+  scalaVersion := "2.13.8",
+  crossScalaVersions := Seq("2.13.8")
 )
 
 lazy val catsIo =
