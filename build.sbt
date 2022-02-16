@@ -1,8 +1,6 @@
-import postfix._
-
 lazy val root = Project("juxtaphase", file("."))
   .settings(commonSettings: _*)
-  .aggregate(console, web)
+  .aggregate(console)
 
 lazy val core = projectAt("core")
   .settings(commonSettings: _*)
@@ -13,25 +11,7 @@ lazy val console = projectAt("console")
   .settings(commonSettings: _*)
   .dependsOn(core)
 
-lazy val web = projectAt("web")
-  .settings(commonSettings: _*)
-  .enablePlay
-  .dependsOn(core)
-  .settings(
-    scalacOptions ++= Seq(
-      s"-P:silencer:sourceRoots=${(Compile / routes / target).value}",
-      s"-P:silencer:pathFilters=.*"
-    ),
-    libraryDependencies ++= Seq(
-      compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
-      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
-    )
-  )
-
 def projectAt(s: String) = Project("juxtaphase-" + s, file("juxtaphase-" + s))
-
-lazy val silencerVersion =
-  "1.7.8"
 
 lazy val commonSettings = Seq(
   scalafmtOnCompile := true,
