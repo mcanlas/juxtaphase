@@ -5,7 +5,7 @@ import cats.implicits._
 
 /**
   * {{{
-  *   sbt "juxtaphase-console/run juxtaphase-core/src/main/scala/com/htmlism/CompilerOptions.scala"
+  *   JK_C= JK_PV= JK_V= sbt "juxtaphase-console/run juxtaphase-core/src/main/scala/com/htmlism/CompilerOptions.scala"
   * }}}
   */
 object Main extends IOApp {
