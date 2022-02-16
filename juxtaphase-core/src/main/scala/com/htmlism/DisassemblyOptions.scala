@@ -1,6 +1,6 @@
 package com.htmlism
 
-object DisassemblyOptions {
+object DisassemblyOptions:
   val flags: Map[String, DisassemblyOptions => Boolean] =
     Map(
       "v" -> { _.verbose },
@@ -11,9 +11,8 @@ object DisassemblyOptions {
     )
 
   val empty: DisassemblyOptions = DisassemblyOptions(verbose = false, showPrivateMembers = false, printByteCode = false)
-}
 
-final case class DisassemblyOptions(verbose: Boolean, showPrivateMembers: Boolean, printByteCode: Boolean) {
+final case class DisassemblyOptions(verbose: Boolean, showPrivateMembers: Boolean, printByteCode: Boolean):
   def flags: Seq[String] =
     DisassemblyOptions.flags.foldLeft(Seq[String]()) { (acc, kv) =>
       if (kv._2(this))
@@ -21,4 +20,3 @@ final case class DisassemblyOptions(verbose: Boolean, showPrivateMembers: Boolea
       else
         acc
     }
-}

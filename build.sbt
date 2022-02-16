@@ -15,13 +15,11 @@ def projectAt(s: String) = Project("juxtaphase-" + s, file("juxtaphase-" + s))
 
 lazy val commonSettings = Seq(
   scalafmtOnCompile := true,
-  organization := "com.htmlism",
-  scalaVersion := "2.13.8",
-  crossScalaVersions := Seq("2.13.8")
+  organization := "com.htmlism"
 )
 
 lazy val catsIo =
   Seq(libraryDependencies ++= Seq("org.typelevel" %% "cats-effect" % "3.2.9"))
 
 lazy val scalaFileIo =
-  Seq(libraryDependencies += "com.github.pathikrit" %% "better-files" % "3.9.1")
+  Seq(libraryDependencies += "com.github.pathikrit" % "better-files_2.13" % "3.9.1")

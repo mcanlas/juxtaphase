@@ -10,7 +10,7 @@ import cats.implicits._
 import better.files.File
 import better.files.Dsl._
 
-class CompilerRunner[F[_]](implicit F: Sync[F]) {
+class CompilerRunner[F[_]](implicit F: Sync[F]):
   private def createTempDirectory: F[File] =
     F.delay {
       File.newTemporaryDirectory()
@@ -66,4 +66,3 @@ class CompilerRunner[F[_]](implicit F: Sync[F]) {
 
       println(Seq(file).!!)
     }
-}

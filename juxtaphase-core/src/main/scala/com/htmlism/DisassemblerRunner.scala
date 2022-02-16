@@ -7,7 +7,7 @@ import cats.implicits._
 
 import better.files.File
 
-class DisassemblerRunner[F[_]](implicit F: Sync[F]) {
+class DisassemblerRunner[F[_]](implicit F: Sync[F]):
   def findClassFiles(proj: SbtProject): F[List[File]] =
     F.delay {
       proj.targetDir.listRecursively
@@ -23,4 +23,3 @@ class DisassemblerRunner[F[_]](implicit F: Sync[F]) {
     F.delay {
       println(("javap" +: opt.flags :+ f.pathAsString).!!)
     }
-}

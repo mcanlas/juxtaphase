@@ -1,6 +1,6 @@
 package com.htmlism
 
-class EnvironmentReader {
+class EnvironmentReader:
   import EnvironmentReader._
 
   type Builder[A] = A => A
@@ -45,14 +45,12 @@ class EnvironmentReader {
 
   def detectCompilerOptions: CompilerOptions =
     compilerKeys.foldLeft(CompilerOptions.empty) { (acc, kv) =>
-      valueAt(kv._1) match {
+      valueAt(kv._1) match
         case Some(v) => kv._2(acc, v)
         case None => acc
-      }
     }
-}
 
-object EnvironmentReader {
+object EnvironmentReader:
   private val prefix = "JK_"
 
   def keyExists(k: String): Boolean =
@@ -63,4 +61,3 @@ object EnvironmentReader {
 
   def getSourceFile(args: List[String]): Option[String] =
     args.headOption
-}
