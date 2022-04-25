@@ -10,7 +10,9 @@ import better.files.File
 class DisassemblerRunner[F[_]](implicit F: Sync[F]):
   def findClassFiles(proj: SbtProject): F[List[File]] =
     F.delay {
-      proj.targetDir.listRecursively
+      proj
+        .targetDir
+        .listRecursively
         .filter(f => f.extension.contains(".class"))
         .toList
         .sortBy(_.pathAsString)

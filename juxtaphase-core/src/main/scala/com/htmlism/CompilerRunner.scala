@@ -23,7 +23,8 @@ class CompilerRunner[F[_]](implicit F: Sync[F]):
 
   private def createBuildFile(opt: CompilerOptions)(proj: SbtProject): F[File] =
     F.delay {
-      proj.buildFile
+      proj
+        .buildFile
         .createIfNotExists()
         .appendLine("scalaVersion := \"" + opt.scalaVersion + "\"")
         .appendLine("scalacOptions += \"-Xprint:" + opt.phases.mkString(",") + "\"")
@@ -48,7 +49,8 @@ class CompilerRunner[F[_]](implicit F: Sync[F]):
 
   private def createSbtRunner(proj: SbtProject): F[File] =
     F.delay {
-      proj.sbtRunner
+      proj
+        .sbtRunner
         .createIfNotExists()
         .appendLine("#!/usr/bin/env bash")
         .appendLine(s"cd ${proj.path}")
