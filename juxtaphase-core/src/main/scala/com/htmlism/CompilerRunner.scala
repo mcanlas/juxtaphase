@@ -5,7 +5,7 @@ import java.nio.file.attribute.PosixFilePermission
 import scala.sys.process._
 
 import cats.effect._
-import cats.implicits._
+import cats.syntax.all._
 
 import better.files.File
 import better.files.Dsl._
