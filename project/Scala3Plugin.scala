@@ -11,8 +11,11 @@ object Scala3Plugin extends AutoPlugin {
     */
   override def trigger: PluginTrigger = AllRequirements
 
+  override val buildSettings: Seq[Setting[_]] = Seq(
+    scalaVersion := "3.2.0"
+  )
+
   override val projectSettings: Seq[Setting[_]] = Seq(
-    scalaVersion := "3.1.3",
     scalacOptions ++= Seq("-indent", "-rewrite")
   )
 }
