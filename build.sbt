@@ -14,7 +14,6 @@ lazy val console = projectAt("console")
 def projectAt(s: String) = Project("juxtaphase-" + s, file("juxtaphase-" + s))
 
 lazy val commonSettings = Seq(
-  scalafmtOnCompile := true,
   organization := "com.htmlism"
 )
 
