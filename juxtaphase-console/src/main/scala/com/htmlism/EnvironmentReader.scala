@@ -1,7 +1,7 @@
 package com.htmlism
 
 class EnvironmentReader:
-  import EnvironmentReader._
+  import EnvironmentReader.*
 
   type Builder[A]    = A           => A
   type StrBuilder[A] = (A, String) => A
@@ -37,10 +37,8 @@ class EnvironmentReader:
 
   private def detectOptions[A](empty: A)(keys: Map[String, Builder[A]]): A =
     keys.foldLeft(empty) { (acc, kv) =>
-      if (keyExists(kv._1))
-        kv._2(acc)
-      else
-        acc
+      if keyExists(kv._1) then kv._2(acc)
+      else acc
     }
 
   def detectCompilerOptions: CompilerOptions =

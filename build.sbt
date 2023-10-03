@@ -1,14 +1,14 @@
 lazy val root = Project("juxtaphase", file("."))
-  .settings(commonSettings: _*)
+  .settings(commonSettings*)
   .aggregate(console)
 
 lazy val core = projectAt("core")
-  .settings(commonSettings: _*)
-  .settings(scalaFileIo: _*)
-  .settings(catsIo: _*)
+  .settings(commonSettings*)
+  .settings(scalaFileIo*)
+  .settings(catsIo*)
 
 lazy val console = projectAt("console")
-  .settings(commonSettings: _*)
+  .settings(commonSettings*)
   .dependsOn(core)
 
 def projectAt(s: String) = Project("juxtaphase-" + s, file("juxtaphase-" + s))
