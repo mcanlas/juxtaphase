@@ -23,7 +23,7 @@ class Pipeline[F[_]](implicit F: Sync[F]):
     src.fold(zero)(run)
 
   private def zero =
-    F.delay { Console.err.println("need to specify a file") }
+    F.delay(Console.err.println("need to specify a file"))
       .as(ExitCode.Error)
 
   private def run(src: String) =
