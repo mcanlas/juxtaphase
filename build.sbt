@@ -18,7 +18,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val catsIo =
-  Seq(libraryDependencies ++= Seq("org.typelevel" %% "cats-effect" % "3.6.1"))
+  Seq(libraryDependencies ++= Seq("org.typelevel" %% "cats-effect" % "3.6.3"))
 
 lazy val scalaFileIo =
   Seq(libraryDependencies += "com.github.pathikrit" % "better-files_2.13" % "3.9.2")
